@@ -387,7 +387,7 @@ case "log":
     print(text.split(separator: "\n").suffix(30).joined(separator: "\n"))
 
 case "version", "--version":
-    print("ai-nudge-cli 0.1.0")
+    print("ai-nudge-cli 0.1.1")
 
 case "help", "-h", "--help":
     print(usage)

@@ -11,8 +11,8 @@ as soon as the Mac wakes. The binary is about 250 KB.
 Messages go through the CLIs' own sign-ins (your Claude Pro/Max or ChatGPT plan), not an API key,
 because API usage doesn't count toward subscription limits.
 
-> Prefer a menu bar app that types into the Claude and ChatGPT apps, with incognito and temporary
-> chats, a settings window and a web page? See **[AI Nudge](https://github.com/sbd1017/ai-nudge)**.
+> Prefer a menu bar app that also types into the Claude app (new or incognito chats), with a
+> settings window, a web page and Keep Awake? See **[AI Nudge](https://github.com/sbd1017/ai-nudge)**.
 
 ```console
 $ ai-nudge-cli add morning --at 06:00 --days weekdays --message "Morning! Starting the clock."
@@ -97,9 +97,8 @@ The defaults are `--days daily`, `--via claude` and `--message "hi"`.
   `"catchUpMinutes"` in the settings file. The agent only runs while you're logged in. A Mac that
   is shut down, or asleep with the lid closed, sends nothing until it's back.
 - **Which window starts:** Claude Code shares its usage limits with claude.ai, so a Claude nudge
-  starts the claude.ai window too. Codex has its own limits, separate from ChatGPT chat, so a Codex
-  nudge starts the Codex window only. For ChatGPT chat itself, use
-  [AI Nudge](https://github.com/sbd1017/ai-nudge).
+  starts the claude.ai window too. A Codex nudge is a Codex request, so it starts the Work + Codex
+  allowance; ChatGPT chat has separate limits, and a chat message doesn't start that window.
 - **No double sends:** each scheduled time is sent once, even if launchd runs the agent again.
   Adding or editing a nudge doesn't send for a time that has already passed today.
 - **Files:**
