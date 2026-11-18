@@ -64,6 +64,8 @@ ai-nudge-cli doctor   # checks the CLIs are found and signed in
 
 `ai-nudge-cli` looks on your `PATH` (plus `~/.local/bin`, `/opt/homebrew/bin` and `/usr/local/bin`)
 and inside the desktop apps: Claude.app keeps a copy of Claude Code, and ChatGPT.app ships `codex`.
+For Codex, the ChatGPT app's copy comes first: an npm install on the `PATH` is a node script, and
+the tools run with those folders added to `PATH` so it can still find `node` under launchd.
 If `doctor` says one isn't signed in, run the command it prints. To point at a specific binary, set
 `"claudePath"` or `"codexPath"` in the settings file.
 

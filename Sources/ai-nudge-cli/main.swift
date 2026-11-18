@@ -110,12 +110,24 @@ func findClaude() -> String? {
     return nil
 }
 
-/// Codex: on PATH, or the copy inside the ChatGPT desktop app.
+/// Codex: the copy inside the ChatGPT desktop app first (a native binary), then PATH. An npm
+/// install on the PATH is a node script, which fails under launchd's bare PATH.
 func findCodex() -> String? {
     if let p = config.codexPath { return executable(p) }
-    return onPath("codex")
-        ?? executable("/Applications/ChatGPT.app/Contents/Resources/codex-cli/bin/codex")
+    return executable("/Applications/ChatGPT.app/Contents/Resources/codex-cli/bin/codex")
         ?? executable("~/Applications/ChatGPT.app/Contents/Resources/codex-cli/bin/codex")
+        ?? onPath("codex")
+}
+
+/// The tools' environment, with the usual install folders on PATH, so a tool installed with npm
+/// finds node when launchd runs us.
+var toolEnvironment: [String: String] {
+    var env = ProcessInfo.processInfo.environment
+    var dirs = (env["PATH"] ?? "/usr/bin:/bin:/usr/sbin:/sbin").split(separator: ":").map(String.init)
+    for d in ["~/.local/bin", "/opt/homebrew/bin", "/usr/local/bin"].map({ ($0 as NSString).expandingTildeInPath })
+    where !dirs.contains(d) { dirs.append(d) }
+    env["PATH"] = dirs.joined(separator: ":")
+    return env
 }
 
 // MARK: - Sending
@@ -143,6 +155,7 @@ func command(for n: Nudge) -> (exe: String, args: [String])? {
 func run(_ exe: String, _ args: [String], timeout: TimeInterval = 300) -> (status: Int32, output: String) {
     let p = Process()
     p.executableURL = URL(fileURLWithPath: exe)
+    p.environment = toolEnvironment
     p.arguments = args
     p.currentDirectoryURL = workDir      // an empty folder, so no project files get picked up
     let pipe = Pipe()
@@ -387,7 +400,7 @@ case "log":
     print(text.split(separator: "\n").suffix(30).joined(separator: "\n"))
 
 case "version", "--version":
-    print("ai-nudge-cli 0.1.1")
+    print("ai-nudge-cli 0.1.2")
 
 case "help", "-h", "--help":
     print(usage)
